@@ -6,6 +6,7 @@ isServiceCount = True
 
 ACTOR_NUM = 3
 AVERAGE_NUM = 100
+LIMIT = 5000
 
 if __name__ == '__main__':
 
@@ -67,31 +68,32 @@ if __name__ == '__main__':
             collision_sum = 0.0
             success_sum = 0.0
             no_action_sum = 0.0
-            for n in range(ACTOR_NUM):
-                collision_sum += collision[n][index]
-                success_sum += success[n][index]
-                no_action_sum += no_action[n][index]
+            if index <= LIMIT:
+                for n in range(ACTOR_NUM):
+                    collision_sum += collision[n][index]
+                    success_sum += success[n][index]
+                    no_action_sum += no_action[n][index]
 
-            average_collision_sum += collision_sum / float(ACTOR_NUM)
-            average_success_sum += success_sum / float(ACTOR_NUM)
-            average_no_action_sum += no_action_sum / float(ACTOR_NUM)
+                average_collision_sum += collision_sum / float(ACTOR_NUM)
+                average_success_sum += success_sum / float(ACTOR_NUM)
+                average_no_action_sum += no_action_sum / float(ACTOR_NUM)
 
-            if index % AVERAGE_NUM == 0 and index > 0:
-                average_eps.append(count*AVERAGE_NUM)
-                average_collision.append(average_collision_sum / float(AVERAGE_NUM))
-                average_success.append(average_success_sum / float(AVERAGE_NUM))
-                average_no_action.append(average_no_action_sum / float(AVERAGE_NUM))
-                average_collision_sum = 0.0
-                average_success_sum = 0.0
-                average_no_action_sum = 0.0
-                count += 1
+                if index % AVERAGE_NUM == 0 and index > 0:
+                    average_eps.append(count*AVERAGE_NUM)
+                    average_collision.append(average_collision_sum / float(AVERAGE_NUM))
+                    average_success.append(average_success_sum / float(AVERAGE_NUM))
+                    average_no_action.append(average_no_action_sum / float(AVERAGE_NUM))
+                    average_collision_sum = 0.0
+                    average_success_sum = 0.0
+                    average_no_action_sum = 0.0
+                    count += 1
 
-            eps.append(index + 1)
+                eps.append(index + 1)
 
 
-        plt.plot(average_eps, average_collision, color='r', label="collision")
-        plt.plot(average_eps, average_success, color='g', label="success")
-        plt.plot(average_eps, average_no_action, color='b', label="no_action")
+        plt.plot(average_eps, average_success, color='#e41a1c', label="success")
+        plt.plot(average_eps, average_collision, color='#00529a', label="collision")
+        plt.plot(average_eps, average_no_action, color='#3FBF00', label="past 150 steps")
 
         plt.legend( loc='upper left', borderaxespad=1)
         plt.draw()

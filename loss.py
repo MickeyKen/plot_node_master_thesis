@@ -1,9 +1,10 @@
 #!/usr/bin/python
 import matplotlib.pyplot as plt
 
-path = 'data/loss_UD-v95.txt'
-AVERAGE_NUM = 100
-AVERAGE = False
+path = 'data/UD-v95_loss_output.txt'
+AVERAGE_NUM = 10
+AVERAGE = True
+LIMIT = 7000
 if __name__ == '__main__':
 
     actor_num = 2
@@ -29,25 +30,26 @@ if __name__ == '__main__':
 
     plt.ion()
     # plt.title('Simple Curve Graph')
-    plt.xlabel('Episode')
+    plt.xlabel('training steps')
     plt.ylabel('Losses')
     plt.grid()
     with open(path) as f:
         for s_line in f:
             print s_line.split(' ')[2]
             count += 1
-            loss = float(s_line.split(' ')[2])
-            xp.append(count)
-            yp.append(loss)
+            if count <= LIMIT:
+                loss = float(s_line.split(' ')[2])
+                xp.append(count*100)
+                yp.append(loss)
 
-            if count % AVERAGE_NUM == 0 and count > 0 and AVERAGE:
-                average_yp.append(sum(sum_array) / len(sum_array))
-                average_xp.append(count)
-                sum_array = []
-            else:
-                sum_array.append(loss)
+                if count % AVERAGE_NUM == 0 and count > 0 and AVERAGE:
+                    average_yp.append(sum(sum_array) / len(sum_array))
+                    average_xp.append(count*100)
+                    sum_array = []
+                else:
+                    sum_array.append(loss)
         # plt.plot(xp,yp, color="#a9ceec", alpha=0.5)
-        plt.plot(xp, yp, color="#00529a")
+        plt.plot(average_xp, average_yp, color="#00529a")
         plt.draw()
         fig.savefig("result_multi_loss.png")
         plt.pause(0)

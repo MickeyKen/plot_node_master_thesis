@@ -6,6 +6,7 @@ isServiceCount = True
 
 ACTOR_NUM = 3
 AVERAGE_NUM = 1
+LIMIT = 5000
 
 if __name__ == '__main__':
 
@@ -30,7 +31,7 @@ if __name__ == '__main__':
 
     plt.ion()
     plt.xlabel('Episode')
-    plt.ylabel('MAX Q-value in the episode')
+    plt.ylabel('MAX Q-value')
 
     plt.grid()
 
@@ -61,12 +62,13 @@ if __name__ == '__main__':
         #     plt.plot(average_eps[i],average_q_values[i], color=cycle[i], label=label)
 
         for index in range(min(len(v) for v in q_values)):
-            sums = 0.0
-            for n in range(ACTOR_NUM):
-                sums += q_values[n][index]
-            sums = sums / float(ACTOR_NUM)
-            plot_q_values.append(sums)
-            plot_eps.append(index*AVERAGE_NUM)
+            if index*AVERAGE_NUM <= LIMIT:
+                sums = 0.0
+                for n in range(ACTOR_NUM):
+                    sums += q_values[n][index]
+                sums = sums / float(ACTOR_NUM)
+                plot_q_values.append(sums)
+                plot_eps.append(index*AVERAGE_NUM)
         plt.plot(plot_eps,plot_q_values, color="#e41a1c")
 
         # plt.legend( loc='upper left', borderaxespad=1)
